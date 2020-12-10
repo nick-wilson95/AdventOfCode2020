@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Template
 {
@@ -8,7 +9,14 @@ namespace Template
         {
             var text = File.ReadAllText("./input.txt");
 
-            var lines = text.Split("\n");
+            var lines = text.Split("\r\n");
+        }
+
+        private static void WriteAnswer(int part, string answer)
+        {
+            Console.WriteLine("Answer for part 2:");
+            Console.WriteLine(answer);
+            Console.WriteLine("");
         }
     }
 }
