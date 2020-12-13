@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Template
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var text = File.ReadAllText("./input.txt");
 
-            var lines = text.Split("\r\n");
+            var input = text.Split("\r\n");
         }
 
         private static void WriteAnswer(int part, string answer)
         {
-            Console.WriteLine("Answer for part 2:");
+            Console.WriteLine($"Answer for part {part}:");
             Console.WriteLine(answer);
             Console.WriteLine("");
         }
