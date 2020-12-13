@@ -31,41 +31,29 @@ namespace Template
             var busList = lines[1].Split(',')
                 .Select(Bus.Create)
                 .Where(x => x.Active)
-                .OrderBy(x => x.Interval)
-                .Reverse()
                 .ToList();
 
-            var pivot = busList[0].Position;
-            busList.ForEach(x => x.Position -= pivot);
-
-            var baseInterval = busList[0].Interval;
-            var bussesToCheck = busList.Skip(1)
-                .ToArray();
-
-            var counter = 0d;
-            var departure = 0d;
+            var time = 0d;
+            var increment = 1d;
 
             while (true)
             {
-                counter++;
-
-                departure = counter * baseInterval;
-
-                var validTime = true;
-                for (var i = 0; i < bussesToCheck.Length; i++)
+                for (var i = busList.Count() - 1; i >= 0; i--)
                 {
-                    var bus = bussesToCheck[i];
-                    if ((departure + bus.Position) % bus.Interval != 0)
+                    var bus = busList[i];
+                    if ((time + bus.Position) % bus.Interval == 0)
                     {
-                        validTime = false;
-                        break;
-                    };
+                        increment *= bus.Interval;
+                        busList.RemoveAt(i);
+                    }
                 }
 
-                if (validTime) break;
+                if (!busList.Any()) break;
+
+                time += increment;
             }
 
-            WriteAnswer(2, departure.ToString());
+            WriteAnswer(2, time.ToString());
         }
 
         private class Bus
