@@ -84,6 +84,80 @@ namespace Template
                 .Aggregate((a,b) => a*b);
 
             WriteAnswer(1, answer1.ToString());
+
+            var tileGrid = new List<List<int>>();
+            var placedTiles = new List<int>();
+            tileGrid.Add(new List<int>());
+
+            var firstTileId = edgeMatches.First(kvp => kvp.Value.Count() == 2).Key;
+            tileGrid[0].Add(firstTileId);
+            placedTiles.Add(firstTileId);
+
+            for (var i = 1; i < 11; i++)
+            {
+                tileGrid[0].Add(
+                    edgeMatches.First(kvp =>
+                        kvp.Value.Count() == 3
+                        && kvp.Value.Contains(tileGrid[0][i - 1])
+                        && !placedTiles.Contains(kvp.Key)
+                    ).Key
+                );
+                placedTiles.Add(tileGrid[0][i]);
+            }
+
+            tileGrid[0].Add(edgeMatches.First(kvp => kvp.Value.Count() == 2 && kvp.Value.Contains(tileGrid[0][10])).Key);
+            placedTiles.Add(tileGrid[0][11]);
+
+
+            for (var j = 1; j < 11; j++)
+            {
+                tileGrid.Add(new List<int>());
+                var firstRowTileId = edgeMatches.First(kvp => kvp.Value.Count() == 3 && kvp.Value.Contains(tileGrid[j - 1][0]) && !placedTiles.Contains(kvp.Key)).Key;
+                tileGrid[j].Add(firstRowTileId);
+                placedTiles.Add(firstRowTileId);
+
+                for (var i = 1; i < 11; i++)
+                {
+                    tileGrid[j].Add(
+                        edgeMatches.First(kvp =>
+                            kvp.Value.Count() == 4
+                            && kvp.Value.Contains(tileGrid[j][i - 1])
+                            && kvp.Value.Contains(tileGrid[j - 1][i])
+                            && !placedTiles.Contains(kvp.Key)
+                        ).Key
+                    );
+                    placedTiles.Add(tileGrid[j][i]);
+                }
+
+                tileGrid[j].Add(edgeMatches.First(kvp =>
+                    kvp.Value.Count() == 3
+                    && kvp.Value.Contains(tileGrid[j][10])
+                    && kvp.Value.Contains(tileGrid[j - 1][11])
+                    && !placedTiles.Contains(kvp.Key)
+                ).Key);
+                placedTiles.Add(tileGrid[j][11]);
+            }
+
+            tileGrid.Add(new List<int>());
+            var firstFinalRowTileId = edgeMatches.First(kvp => kvp.Value.Count() == 2 && kvp.Value.Contains(tileGrid[10][0]) && !placedTiles.Contains(kvp.Key)).Key;
+            tileGrid[11].Add(firstFinalRowTileId);
+            placedTiles.Add(firstFinalRowTileId);
+
+            for (var i = 1; i < 11; i++)
+            {
+                tileGrid[11].Add(
+                    edgeMatches.First(kvp =>
+                        kvp.Value.Count() == 3
+                        && kvp.Value.Contains(tileGrid[11][i - 1])
+                        && kvp.Value.Contains(tileGrid[10][i])
+                        && !placedTiles.Contains(kvp.Key)
+                    ).Key
+                );
+                placedTiles.Add(tileGrid[11][i]);
+            }
+
+            tileGrid[11].Add(edgeMatches.First(kvp => kvp.Value.Count() == 2 && kvp.Value.Contains(tileGrid[11][10]) && kvp.Value.Contains(tileGrid[10][11])).Key);
+            placedTiles.Add(tileGrid[11][11]);
         }
 
         private static void WriteAnswer(int part, string answer)
